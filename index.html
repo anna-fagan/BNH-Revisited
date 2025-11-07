@@ -12,117 +12,134 @@
         </style>
     </head>
     <body>
+      <div class="body-div">
         <h1>Bear, Ninja, Hunter</h1>
         <p>Play against the computer!</p>
         <ul>
-            <li>The Bear beats the Hunter</li>
+            <li>The Bear Beats the Hunter</li>
             <li>The Hunter beats the Ninja</li>
-            <li>The Ninja beats the Bear</li>
+            <li>And the Ninja beats the Bear</li>
         </ul>
-        <p>Click a button below to select your choice</p>
+        <p>Click a button below to select your choice.</p>
         <div class="choice">
             <button onclick="gameResult = playGame('bear')">Bear</button>
             <button onclick="gameResult = playGame('ninja')">Ninja</button>
             <button onclick="gameResult = playGame('hunter')">Hunter</button>
         </div>
-        <div class="output-div" id="output">
+        <div class="output-div" id="output" hidden>
             <h2 id="game-results"></h2>
         </div>
-        <p id="games-played"></p>
-        <p id="games-won"></p>
-        <div class="choice" id="play-again">
+        <p id="games-played" hidden></p>
+        <p id="games-won" hidden></p>
+        <div class="play-again" id="play-again" hidden>
         </div>
+      </div>
     </body>
     <script>
-        let gameResult = null;
-        // Set up a play again function
-        function playAgain(){
-            const buttonDiv = document.getElementById('play-again');
-            const outputDiv = document.getElementById('output');
-            const playAgainDiv = document.getElementById('play-again');
-            outputDiv.style.display = 'none';
-            playAgainDiv.style.display = 'none';
-            gameResult = null;
-        }
-        console.log("Step1");
+      // Scope the div's outside the functions so they can be accessed later outside the function
+      const outputDiv = document.getElementById('output');
+      const playAgainDiv = document.getElementById('play-again');
+      const gamesPlayed = document.getElementById('games-played');
+      const gamesWon = document.getElementById('games-won');
 
-        // Set up Function that runs the play game loop for bear ninja hunter buttons
-        function playGame(uChoice){
-            // create computer choices aray
-            const cChoices= ['bear','ninja','hunter'];
-        
-            // Generate a random number to put into the array
-            randomNumber= Math.floor(Math.random()*3);
+      // Ensure game results are null at the beginning so they can be accessed outside function
+      let gameResult = null;
 
-            // Set cChoice to name in array that corresponds to int
-            compChoice= cChoices[randomNumber];
+      console.log("Step1");
 
-            // Create result variable
-            let result = null;
-            console.log("Step2");
+      // Set up Function that runs the play game loop for bear ninja hunter buttons
+      function playGame(uChoice){
 
-            // Run result through switch case
-            switch (uChoice){
-              case 'bear':
-                if (compChoice ==='ninja'){
-                  result='win';
-                } else if (compChoice ==='hunter'){
-                  result='lose';
-                } else{
-                  result='tie';
-                }
-                break;
-              case 'ninja':
-                if (compChoice ==='ninja'){
-                  result='tie';
-                } else if (compChoice ==='hunter'){
-                  result='win';
-                } else{
-                  result='lose';
-                }
-                break;
-              case 'hunter':
-                if (compChoice ==='ninja'){
-                  result='lose';
-                } else if (compChoice ==='hunter'){
-                  result='tie';
-                } else{
-                  result='win';
-                }
-                break;
-              }
-              console.log("Step3");
+        // create computer choices aray
+        const cChoices= ['bear','ninja','hunter'];
+    
+        // Generate a random number to put into the array
+        randomNumber= Math.floor(Math.random()*3);
 
-            let resultText = `You chose ${uChoice}! The computer chose ${compChoice}. You ${result}!`
-            console.log("Step4");
+        // Set cChoice to name in array that corresponds to int
+        compChoice= cChoices[randomNumber];
 
-            // Change output div display to inline block
-            let outputDiv = document.getElementById('output');
-            if (outputDiv.display === 'none'){
-                outputDiv.style.display = 'inline-block';
+        // Create result variable
+        let result = null;
+        console.log("Step2");
+
+        // Run result through switch case
+        switch (uChoice){
+          case 'bear':
+            if (compChoice ==='ninja'){
+              result='win';
+            } else if (compChoice ==='hunter'){
+              result='lose';
+            } else{
+              result='tie';
             }
-
-            // Put the results inside the div
-            document.getElementById('game-results').innerHTML = gameResult;
-
-            // Display play again Div
-            let playAgainDiv = document.getElementById('play-again').innerHTML;
-            if (playAgainDiv.display === 'none'){
-                playAgainDiv.style.display = 'inline-block'
+            break;
+          case 'ninja':
+            if (compChoice ==='ninja'){
+              result='tie';
+            } else if (compChoice ==='hunter'){
+              result='win';
+            } else{
+              result='lose';
             }
-            console.log("Step5");
+            break;
+          case 'hunter':
+            if (compChoice ==='ninja'){
+              result='lose';
+            } else if (compChoice ==='hunter'){
+              result='tie';
+            } else{
+              result='win';
+            }
+            break;
+          }
+          console.log("Step3");
+          // empty variable for results
+          let resultText;
 
-            // create a new button
-            const buttonDiv = document.getElementById('play-again');
-            const createButton = document.createElement('button');
-            createButton.textContent = 'Play Again?';
-            createButton.onclick = playAgain();
-            createButton.addEventListener('click', function(){
-                this.remove();
-            })
+          // get proper output based on case
+          if (result === 'win'){
+            resultText = 'You win!'
+          } else if (result === 'lose'){
+            resultText = 'The computer wins!'
+          }else{
+            resultText = 'You and the computer tie!'
+          }
 
-            // Create button inside the play again div
-            buttonDiv.appendChild(createButton);
+        let gameResult = `You chose ${uChoice}
+        The computer chose ${compChoice}
+        ${resultText}!`
+        console.log("Step4");
+
+        // Put the results inside the div
+        document.getElementById('game-results').innerHTML = gameResult;
+
+        console.log("Step5");
+
+        // create a new button
+        const playAgainDiv = document.getElementById('play-again');
+        const createButton = document.createElement('button');
+        createButton.textContent = 'Play Again?';
+        createButton.addEventListener('click', playAgain());
+        createButton.addEventListener('click', function(){
+            this.remove();
+        })
+
+        // Create button inside the play again div
+        playAgainDiv.appendChild(createButton);
+
+        // Display play again Div
+        playAgainDiv.hidden = false;
+
+        // display outputDiv div
+        outputDiv.hidden= false;
+      }
+
+      // Set up a play again function
+      function playAgain(){
+        outputDiv.hidden= true;
+        playAgainDiv.hidden = true;
+        gameResult = null;
         }
 
         // Set up gameResult as null
